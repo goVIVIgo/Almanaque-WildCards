@@ -22,6 +22,9 @@ import silverfishImg from './assets/silverfish.png';
 
 import AddModal from './components/AddModal.jsx';
 
+import AWclaro from './assets/AWclaro.png';
+import AWescuro from './assets/AWescuro.png';
+
 const getFromStorage = (key) => {
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : [];
@@ -661,19 +664,37 @@ function App() {
     }
   };
 
-  const bgColor = isAdminMode ? 'bg-indigo-100' : 'bg-gray-100';
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem('themeMode');
+    return savedMode ? JSON.parse(savedMode) : false;
+  });
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(prevMode => {
+      const newMode = !prevMode;
+      localStorage.setItem('themeMode', JSON.stringify(newMode));
+      return newMode;
+    });
+  };
+
+  const bgColor = isDarkMode ? ' hover:bg-gray-700' : 'bg-pink-100';
+  const textColor = isDarkMode ? 'text-white' : 'text-gray-800';
 
   return (
-    <div className={`min-h-screen p-8 ${bgColor}`}> 
+   <div className={`min-h-screen p-8 ${bgColor} ${textColor}`}> 
 
-      <h1 
+      <div
         className="mb-6 cursor-pointer text-center text-4xl font-bold"
         onClick={handleTitleClick}
         title="dica: meu, seu, nosso aniversario!"
       >
-        Almanaque WildCards {isAdminMode && '(modo: admin)'}
-      </h1>
-
+        <img
+          src={isDarkMode ? AWescuro : AWclaro}
+          alt="Almanaque WildCards"
+          className="mx-auto h-24 sm:h-28 md:h-32 lg:h-40 object-contain"
+        />
+       {isAdminMode && <p className={`mt-2 text-xl font-bold ${textColor}`}>(modo: admin)</p>}
+</div>
       {isAdminMode && (
           <div className="col-span-full mt-6 mb-8 text-center">
             <button onClick={() => setIsAddModalOpen(true)}
@@ -729,6 +750,15 @@ function App() {
         atributosDisponiveis={atributos}
         cartasExistentes={cartas}
       />
+
+      <button
+        onClick={toggleDarkMode}
+        className="fixed top-4 right-4 z-50 rounded-full bg-gray-500 p-3 text-white shadow-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+        title={isDarkMode ? "Mudar para Tema Claro" : "Mudar para Tema Escuro"}
+      >
+        {/* Ícone simples (pode trocar por SVG se preferir) */}
+        {isDarkMode ? '☀️' : '🌙'}
+      </button>
     </div>
   );
 }
