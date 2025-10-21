@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const TABS = ['Criatura', 'Animal', 'Ação', 'Atributo'];
+const TABS = ['Criatura', 'Animal', 'Ação', 'Atributo', 'Efeito'];
 
 function AddEntityModal({
   isOpen,
@@ -9,18 +9,21 @@ function AddEntityModal({
   onSaveAnimal,
   onSaveAcao,
   onSaveAtributo,
+  onSaveEfeito = () => [],
   animaisDisponiveis = [],
   acoesDisponiveis = [],
-  atributosDisponiveis = []
+  atributosDisponiveis = [],
+  efeitosDisponiveis = [],
+  cartasExistentes = []
 }) {
   const [activeTab, setActiveTab] = useState(TABS[0]);
 
   const [habilidade, setHabilidade] = useState('');
-  const [vida, setVida] = useState(0);
-  const [tamanho, setTamanho] = useState(0);
-  const [ataque, setAtaque] = useState(0);
-  const [defesa, setDefesa] = useState(0);
-  const [custo, setCusto] = useState(0);
+  const [vida, setVida] = useState('');
+  const [tamanho, setTamanho] = useState('');
+  const [ataque, setAtaque] = useState('');
+  const [defesa, setDefesa] = useState('');
+  const [custo, setCusto] = useState('');
   const [selectedAnimalId, setSelectedAnimalId] = useState('');
 
   const [selectedAcoes, setSelectedAcoes] = useState([]);
@@ -35,10 +38,33 @@ function AddEntityModal({
   const [atributoNome, setAtributoNome] = useState('');
   const [atributoDesc, setAtributoDesc] = useState('');
 
+  const [efeitoNome, setEfeitoNome] = useState('');
+  const [efeitoDesc, setEfeitoDesc] = useState('');
+  const [selectedEfeitos, setSelectedEfeitos] = useState([]);
+  const [dropdownEfeito, setDropdownEfeito] = useState('');
+
   const resetForms = () => {
     setHabilidade('');
-    setVida(0);
-    //resetar tudo
+    setVida('');
+    setTamanho('');
+    setAtaque('');
+    setDefesa('');
+    setCusto('');
+    setSelectedAnimalId('');
+    setSelectedAcoes([]);
+    setSelectedAtributos([]);
+    setSelectedEfeitos([]);
+    setDropdownAcao('');
+    setDropdownAtributo('');
+    setDropdownEfeito('');
+    setAnimalNome('');
+    setAnimalNomeCient('');
+    setAcaoNome('');
+    setAcaoDesc('');
+    setAtributoNome('');
+    setAtributoDesc('');
+    setEfeitoNome('');
+    setEfeitoDesc('');
   }
 
 
@@ -51,16 +77,19 @@ function AddEntityModal({
           alert('Por favor, selecione um Animal Base.');
           return;
         }
+        const nomeAnimalSelecionado = animaisDisponiveis.find(a => a.id === Number(selectedAnimalId))?.nome;
         onSaveCarta({
           habilidade,
-          vida,
-          tamanho,
-          ataque,
-          defesa,
-          custo,
+          vida: Number(vida) || 0,
+          tamanho: Number(tamanho) || 0,
+          ataque: Number(ataque) || 0,
+          defesa: Number(defesa) || 0,
+          custo: Number(custo) || 0,
           animalId: Number(selectedAnimalId),
+          nomeAnimalSelecionado: nomeAnimalSelecionado,
           acoesIds: selectedAcoes,
           atributosIds: selectedAtributos,
+          efeitosIds: selectedEfeitos
         });
 
       } else if (activeTab === 'Animal') {
@@ -94,6 +123,17 @@ function AddEntityModal({
         setAtributoNome('');
         setAtributoDesc('');
         alert('Atributo salvo! Você pode selecioná-lo na aba "Criatura".');
+        setActiveTab('Criatura');
+
+      } else if (activeTab === 'Efeito') {
+        if (!efeitoNome) {
+          alert('Por favor, preencha o nome do efeito.');
+          return;
+        }
+        onSaveEfeito({ nome: efeitoNome, descricao: efeitoDesc });
+        setEfeitoNome('');
+        setEfeitoDesc('');
+        alert('Efeito salvo! Você pode selecioná-lo na aba "Criatura".');
         setActiveTab('Criatura');
       }
 
@@ -136,6 +176,20 @@ function AddEntityModal({
   const getAcaoNome = (id) => acoesDisponiveis.find(a => a.id === id)?.nome || '??';
   const getAtributoNome = (id) => atributosDisponiveis.find(a => a.id === id)?.nome || '??';
 
+  const getEfeitoNome = (id) => efeitosDisponiveis.find(e => e.id === id)?.nome || '??';
+  const addEfeito = () => {
+    const id = Number(dropdownEfeito);
+    if (id && !selectedEfeitos.includes(id)) {
+      setSelectedEfeitos([...selectedEfeitos, id]);
+    }
+    setDropdownEfeito('');
+  };
+  const removeEfeito = (idToRemove) => {
+    setSelectedEfeitos(selectedEfeitos.filter(id => id !== idToRemove));
+  };
+
+  const usedAnimalIds = cartasExistentes.map(carta => carta.animalId);
+
   const renderFormContent = () => {
     switch (activeTab) {
       case 'Criatura':
@@ -145,23 +199,42 @@ function AddEntityModal({
 
             <div className="sm:col-span-3">
               <label htmlFor="vida" className="block text-sm font-medium leading-6 text-gray-900">Vida (HP)</label>
-              <input type="number" id="vida" value={vida} onChange={(e) => setVida(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+              <input type="number" id="vida" value={vida} onChange={(e) => setVida(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
             </div>
             <div className="sm:col-span-3">
               <label htmlFor="tamanho" className="block text-sm font-medium leading-6 text-gray-900">Tamanho</label>
-              <input type="number" id="tamanho" value={tamanho} onChange={(e) => setTamanho(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+              <input type="number" id="tamanho" value={tamanho} onChange={(e) => setTamanho(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
             </div>
             <div className="sm:col-span-3">
               <label htmlFor="ataque" className="block text-sm font-medium leading-6 text-gray-900">Ataque</label>
-              <input type="number" id="ataque" value={ataque} onChange={(e) => setAtaque(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+              <input type="number" id="ataque" value={ataque} onChange={(e) => setAtaque(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
             </div>
             <div className="sm:col-span-3">
               <label htmlFor="defesa" className="block text-sm font-medium leading-6 text-gray-900">Defesa</label>
-              <input type="number" id="defesa" value={defesa} onChange={(e) => setDefesa(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+              <input type="number" id="defesa" value={defesa} onChange={(e) => setDefesa(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
             </div>
             <div className="sm:col-span-3">
               <label htmlFor="custo" className="block text-sm font-medium leading-6 text-gray-900">Custo</label>
-              <input type="number" id="custo" value={custo} onChange={(e) => setCusto(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+              <input type="number" id="custo" value={custo} onChange={(e) => setCusto(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="animal" className="block text-sm font-medium leading-6 text-gray-900">Animal Base</label>
+              <select id="animal" value={selectedAnimalId} onChange={(e) => setSelectedAnimalId(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
+                <option value="">Selecione...</option>
+                {animaisDisponiveis.map(animal => {
+                  const jaExiste = usedAnimalIds.includes(animal.id);
+                  return (
+                    <option
+                      key={animal.id}
+                      value={animal.id}
+                      disabled={jaExiste}
+                    >
+                      {animal.nome} {jaExiste ? '(Já Criado)' : ''}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
 
             <div className="sm:col-span-3">
@@ -240,6 +313,36 @@ function AddEntityModal({
               </div>
             </div>
 
+            <div className="col-span-full">
+              <label className="block text-sm font-medium leading-6 text-gray-900">Efeitos Associados</label>
+              <div className="mt-1 flex flex-wrap gap-2">
+                {selectedEfeitos.map(id => (
+                  <span key={id} className="flex items-center gap-1 rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-800">
+                    {getEfeitoNome(id)}
+                    <button type="button" onClick={() => removeEfeito(id)} className="font-bold text-purple-600 hover:text-purple-800">X</button>
+                  </span>
+                ))}
+              </div>
+              <div className="mt-2 flex gap-2">
+                <select
+                  value={dropdownEfeito}
+                  onChange={(e) => setDropdownEfeito(e.target.value)}
+                  className="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
+                  <option value="">Selecione um efeito...</option>
+                  {efeitosDisponiveis.map(ef => (
+                    <option key={ef.id} value={ef.id} disabled={selectedEfeitos.includes(ef.id)}>
+                      {ef.nome}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={addEfeito}
+                  className="rounded bg-pink-200 px-3 py-1 text-sm hover:bg-pink-300 whitespace-nowrap">
+                  + Adicionar Efeito
+                </button>
+              </div>
+            </div>
           </div>
         );
 
@@ -288,6 +391,22 @@ function AddEntityModal({
           </div>
         );
 
+      case 'Efeito':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="efeitoNome" className="block text-sm font-medium text-gray-900">Nome do Efeito</label>
+              <input type="text" id="efeitoNome" value={efeitoNome} onChange={(e) => setEfeitoNome(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ex: Dano em área" />
+            </div>
+            <div>
+              <label htmlFor="EfeitoDesc" className="block text-sm font-medium text-gray-900">Descrição (Opcional)</label>
+              <textarea id="EfeitoDesc" rows={3} value={efeitoDesc} onChange={(e) => setEfeitoDesc(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+            </div>
+            <p className="text-sm text-gray-500">Ao salvar, o efeito ficará disponível no dropdown da aba "Criatura".</p>
+
+          </div>
+        );
+
       default:
         return null;
     }
@@ -319,7 +438,8 @@ function AddEntityModal({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="mt-2 space-y-4 min-h-[200px]">
+
+          <div className="mt-2 space-y-4 max-h-[60vh] overflow-y-auto p-1">
             {renderFormContent()}
           </div>
 
@@ -333,7 +453,6 @@ function AddEntityModal({
               type="submit"
               className="rounded-md border border-transparent bg-pink-400 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-pink-500"
             >
-
               {activeTab === 'Criatura' ? 'Salvar Criatura (✓)' : `Salvar ${activeTab} (✓)`}
             </button>
           </div>
