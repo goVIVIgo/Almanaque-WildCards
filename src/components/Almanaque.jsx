@@ -24,16 +24,48 @@ function Almanaque() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleSaveCarta = (novaCarta) => {
-    const cartaComId = { ...novaCarta, id: Date.now() };
+  const handleSaveCarta = (dataFromModal) => {
+
+    const { habilidade, vida, tamanho, ataque, defesa, custo, animalId, acoesIds, atributosIds } = dataFromModal;
+
+
+    const animal = animais.find(a => a.id === Number(animalId)); 
+    if (!animal) {
+      alert("Erro: Animal não encontrado! (ID: " + animalId + ")");
+      return;
+    }
+
+    const acoesObjs = acoesIds.map(id => acoes.find(a => a.id === Number(id))).filter(Boolean);
+    const atributosObjs = atributosIds.map(id => atributos.find(a => a.id === Number(id))).filter(Boolean);
+
+    const novaCarta = {
+      id: Date.now(),
+      nome: animal.nome,
+      numero: `#${String(Date.now()).slice(-4)}`,
+      imagemSrc: animal.imagemSrc,
+      statsResumo: `tam: ${tamanho} hp: ${vida} atk: ${ataque} def: ${defesa}`,
+      statsDetalhe: {
+        hp: String(vida),
+        tamanho: String(tamanho),
+        defesa: String(defesa),
+        ataque: String(ataque)
+      },
+      descricao: habilidade,
+      acoes: acoesObjs,
+      atributos: atributosObjs,
+      tags: [
+        ...atributosObjs.map(a => ({ nome: a.nome, tipo: 'ciano' })),
+        ...acoesObjs.map(a => ({ nome: a.nome, tipo: 'amarelo' }))
+      ]
+    };
+
     setCartas(prevCartas => {
-      const novasCartas = [...prevCartas, cartaComId];
+      const novasCartas = [...prevCartas, novaCarta];
       saveToStorage('cartas', novasCartas);
       return novasCartas;
     });
-    console.log("Carta salva:", cartaComId);
+
     setIsModalOpen(false);
-  };
 
   const handleSaveAnimal = (novoAnimal) => {
     const animalComId = { ...novoAnimal, id: Date.now() };
@@ -107,6 +139,7 @@ function Almanaque() {
       )}
     </div>
   );
+}
 }
 
 export default Almanaque;

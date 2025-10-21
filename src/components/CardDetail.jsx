@@ -1,9 +1,8 @@
-
 function CardDetail({ carta, onClose }) {
   
   if (!carta) return null;
 
-  const { nome, numero, imagemSrc, statsDetalhe, descricao, habilidades } = carta;
+  const { nome, numero, imagemSrc, statsDetalhe, descricao, acoes, atributos } = carta;
 
   return (
     <div className="relative mx-auto max-w-3xl rounded-xl border border-gray-300 bg-white p-6 shadow-2xl">
@@ -28,23 +27,35 @@ function CardDetail({ carta, onClose }) {
           <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
 
             <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <h4 className="font-bold text-gray-800"> Ação:</h4>
-              <h4 className="font-bold text-gray-800"> {habilidades[0].nome}</h4>
-              <p className="text-sm text-gray-600">{habilidades[0].descricao}</p>
+              <h4 className="font-bold text-gray-800">Ações:</h4>
+              {acoes && acoes.length > 0 ? (
+                acoes.map(acao => (
+
+                  <div key={acao.id || acao.nome} className="mt-2">
+                    <h5 className="font-semibold text-gray-800">{acao.nome}</h5>
+                    <p className="text-sm text-gray-600">{acao.descricao}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500">Nenhuma ação.</p>
+              )}
             </div>
 
             <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <h4 className="font-bold text-gray-800"> Atributos:</h4>
-              <h4 className="font-bold text-gray-800">{habilidades[1].nome}</h4>
-              <p className="text-sm text-gray-600">{habilidades[1].descricao}</p>
-              
-              {habilidades[1].social && (
-                <>
-                  <h5 className="mt-3 font-semibold text-gray-700">{habilidades[1].social.nome}</h5>
-                  <p className="text-sm text-gray-600">{habilidades[1].social.descricao}</p>
-                </>
+              <h4 className="font-bold text-gray-800">Atributos:</h4>
+              {atributos && atributos.length > 0 ? (
+                atributos.map(attr => (
+
+                  <div key={attr.id || attr.nome} className="mt-2">
+                    <h5 className="font-semibold text-gray-800">{attr.nome}</h5>
+                    <p className="text-sm text-gray-600">{attr.descricao}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500">Nenhum atributo.</p>
               )}
             </div>
+            
           </div>
         </div>
 

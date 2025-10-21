@@ -22,8 +22,18 @@ import silverfishImg from './assets/silverfish.png';
 
 import AddModal from './components/AddModal.jsx';
 
+const getFromStorage = (key) => {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : [];
+};
 
-const dadosDasCartas = [
+const saveToStorage = (key, data) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+
+
+const initialCartas = [
   {
     id: 1,
     nome: 'Orca',
@@ -37,19 +47,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -69,19 +72,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -101,19 +97,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -133,19 +122,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -165,19 +147,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -197,19 +172,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -229,19 +197,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -261,19 +222,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -293,19 +247,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -325,19 +272,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -357,19 +297,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -389,19 +322,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -421,19 +347,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -453,19 +372,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -485,19 +397,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -517,19 +422,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -549,19 +447,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -581,19 +472,12 @@ const dadosDasCartas = [
       ataque: 'X'
     },
     descricao: 'blablabla blablabla',
-    habilidades: [
-      {
-        nome: 'Derrubar',
-        descricao: 'blebleble blebleble',
-      },
-      {
-        nome: 'Contracoloração',
-        descricao: 'bliblbilbi bliblbibli',
-        social: {
-          nome: 'Social',
-          descricao: 'blobloblo blobloblo',
-        }
-      }
+    acoes: [
+      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
+    ],
+    atributos: [
+      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
+      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
     ],
     tags: [
       { nome: 'derrubar', tipo: 'amarelo' },
@@ -606,6 +490,46 @@ const dadosDasCartas = [
 const senhaGamedev = '250618';
 
 function App() {
+
+  const [cartas, setCartas] = useState(() => {
+    const saved = getFromStorage('cartas');
+
+    return saved.length > 0 ? saved : initialCartas;
+  });
+
+  const [animais, setAnimais] = useState(() => {
+    const saved = getFromStorage('animais');
+    if (saved.length > 0) return saved;
+
+    const defaultAnimais = initialCartas.map(carta => ({
+      id: carta.id,
+      nome: carta.nome,
+      imagemSrc: carta.imagemSrc
+    }));
+    saveToStorage('animais', defaultAnimais);
+    return defaultAnimais;
+  });
+
+  const [acoes, setAcoes] = useState(() => {
+    const saved = getFromStorage('acoes');
+    if (saved.length > 0) return saved;
+
+    const allAcoes = initialCartas.flatMap(c => c.acoes || []);
+    const uniqueAcoes = Array.from(new Map(allAcoes.map(a => [a.id, a])).values());
+    saveToStorage('acoes', uniqueAcoes);
+    return uniqueAcoes;
+  });
+
+  const [atributos, setAtributos] = useState(() => {
+    const saved = getFromStorage('atributos');
+    if (saved.length > 0) return saved;
+
+    const allAtributos = initialCartas.flatMap(c => c.atributos || []);
+    const uniqueAtributos = Array.from(new Map(allAtributos.map(a => [a.id, a])).values());
+    saveToStorage('atributos', uniqueAtributos);
+    return uniqueAtributos;
+  });
+
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
@@ -641,10 +565,106 @@ function App() {
     }
   };
 
+  const handleSaveAnimal = (novoAnimal) => {
+    const animalComId = { ...novoAnimal, id: Date.now() };
+    setAnimais(prevAnimais => {
+      const novosAnimais = [...prevAnimais, animalComId];
+      saveToStorage('animais', novosAnimais);
+      return novosAnimais;
+    });
+  };
+
+  const handleSaveAcao = (novaAcao) => {
+    const acaoComId = { ...novaAcao, id: Date.now() };
+    setAcoes(prevAcoes => {
+      const novasAcoes = [...prevAcoes, acaoComId];
+      saveToStorage('acoes', novasAcoes);
+      return novasAcoes;
+    });
+  };
+  
+  const handleSaveAtributo = (novoAtributo) => {
+    const atributoComId = { ...novoAtributo, id: Date.now() };
+    setAtributos(prevAtributos => {
+      const novosAtributos = [...prevAtributos, atributoComId];
+      saveToStorage('atributos', novosAtributos);
+      return novosAtributos;
+    });
+  };
+
+  const handleSaveCarta = (dataFromModal) => {
+    const { habilidade, vida, tamanho, ataque, defesa, custo, animalId, nomeAnimalSelecionado, acoesIds, atributosIds } = dataFromModal;
+
+    const animal = animais.find(a => a.nome === nomeAnimalSelecionado); 
+    if (!animal) {
+
+      const animalById = animais.find(a => a.id === animalId);
+      if (!animalById) {
+        alert("Erro crítico: Animal não encontrado nem pelo nome nem pelo ID!");
+        return;
+      }
+
+      console.warn("Animal encontrado pelo ID, mas não pelo nome. Verifique consistência.");
+
+    }
+
+    const animalJaExiste = cartas.some(carta => carta.nome === nomeAnimalSelecionado); 
+    if (animalJaExiste) {
+      alert("Erro: Já existe uma carta para este animal (Nome: " + nomeAnimalSelecionado + ")!");
+      return;
+    }
+
+    const acoesObjs = acoesIds.map(id => acoes.find(a => a.id === id)).filter(Boolean);
+    const atributosObjs = atributosIds.map(id => atributos.find(a => a.id === id)).filter(Boolean);
+
+    const novaCarta = {
+      id: Date.now(),
+      animalId: animalId,
+      nome: nomeAnimalSelecionado || animal?.nome || `Animal ID ${animalId}`,
+      numero: `#${String(Date.now()).slice(-4)}`,
+      imagemSrc: animal?.imagemSrc || animais.find(a=>a.id === animalId)?.imagemSrc,
+      statsResumo: `tam: ${tamanho} hp: ${vida} atk: ${ataque} def: ${defesa}`,
+      statsDetalhe: {
+        hp: String(vida),
+        tamanho: String(tamanho),
+        defesa: String(defesa),
+        ataque: String(ataque)
+      },
+      descricao: habilidade,
+      acoes: acoesObjs,
+      atributos: atributosObjs,
+      tags: [
+        ...atributosObjs.map(a => ({ nome: a.nome, tipo: 'ciano' })),
+        ...acoesObjs.map(a => ({ nome: a.nome, tipo: 'amarelo' }))
+      ]
+    };
+
+    setCartas(prevCartas => {
+      const novasCartas = [...prevCartas, novaCarta];
+      saveToStorage('cartas', novasCartas);
+      return novasCartas;
+    });
+
+    setIsAddModalOpen(false);
+  };
+  
+  const handleDeleteCarta = (idToDelete) => {
+    setCartas(prevCartas => {
+      const novasCartas = prevCartas.filter(carta => carta.id !== idToDelete);
+      saveToStorage('cartas', novasCartas);
+      console.log("Carta excluída:", idToDelete);
+      return novasCartas;
+    });
+
+    if (cartaSelecionada?.id === idToDelete) {
+        setCartaSelecionada(null);
+    }
+  };
+
   const bgColor = isAdminMode ? 'bg-indigo-100' : 'bg-gray-100';
 
   return (
-   <div className={`min-h-screen p-8 ${bgColor}`}> 
+    <div className={`min-h-screen p-8 ${bgColor}`}> 
 
       <h1 
         className="mb-6 cursor-pointer text-center text-4xl font-bold"
@@ -656,22 +676,25 @@ function App() {
 
       {isAdminMode && (
           <div className="col-span-full mt-6 mb-8 text-center">
-             <button onClick={() => setIsAddModalOpen(true)}
-             className="rounded bg-pink-300 px-4 py-2 font-bold text-white hover:bg-pink-400 ">
-               Adicionar Nova Carta
-             </button>
+            <button onClick={() => setIsAddModalOpen(true)}
+            className="rounded bg-pink-300 px-4 py-2 font-bold text-white hover:bg-pink-400 ">
+              Adicionar Nova Carta
+            </button>
           </div>
         )}
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {dadosDasCartas.map((carta) => (
+        {cartas.map((carta) => ( 
           <Card 
             key={carta.id} 
+            cardId={carta.id}
             nome={carta.nome}
             imagemSrc={carta.imagemSrc}
             statsResumo={carta.statsResumo}
             tags={carta.tags}
             onClick={() => handleCardClick(carta)}
+            isAdmin={isAdminMode}
+            onDelete={handleDeleteCarta}
           />
         ))}
       </div>
@@ -691,10 +714,21 @@ function App() {
           </div>
         </div>
       )}
+
       <AddModal 
-    isOpen={isAddModalOpen} 
-    onClose={() => setIsAddModalOpen(false)} 
-  />
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+        
+        onSaveCarta={handleSaveCarta}
+        onSaveAnimal={handleSaveAnimal}
+        onSaveAcao={handleSaveAcao}
+        onSaveAtributo={handleSaveAtributo}
+
+        animaisDisponiveis={animais}
+        acoesDisponiveis={acoes}
+        atributosDisponiveis={atributos}
+        cartasExistentes={cartas}
+      />
     </div>
   );
 }

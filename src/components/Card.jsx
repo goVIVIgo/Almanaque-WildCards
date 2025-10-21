@@ -1,4 +1,4 @@
-function Card({ nome, imagemSrc, statsResumo, tags, onClick }) {
+function Card({ nome, imagemSrc, statsResumo, tags, onClick, isAdmin, onDelete, cardId }) {
 
   const getTagColor = (tipo) => {
     switch (tipo) {
@@ -11,12 +11,29 @@ function Card({ nome, imagemSrc, statsResumo, tags, onClick }) {
     }
   };
 
+  const handleDeleteClick = (event) => {
+    event.stopPropagation();
+    if (window.confirm(`Tem certeza que deseja excluir a carta "${nome}"?`)) {
+      onDelete(cardId);
+    }
+  };
+
   return (
 
     <div 
       onClick={onClick} 
-      className="max-w-xs cursor-pointer rounded border border-gray-400 bg-white p-2 shadow-md transition-all hover:scale-105 hover:shadow-lg"
+      className="relative max-w-xs cursor-pointer rounded border border-gray-400 bg-white p-2 shadow-md transition-all hover:scale-105 hover:shadow-lg"
     >
+      {isAdmin && (
+        <button
+          onClick={handleDeleteClick}
+          className="absolute -right-2 -top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white text-sm font-bold shadow-md transition-transform hover:scale-110 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+          aria-label={`Excluir ${nome}`}
+          title={`Excluir ${nome}`}
+        >
+          &times; 
+        </button>
+      )}
 
       <h3 className="text-center font-bold">{nome}</h3>
 

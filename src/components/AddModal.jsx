@@ -1,26 +1,27 @@
 import { useState } from 'react';
 
-const TABS = ['Criatura', 'Animal', 'Ação', 'Atributo']; 
+const TABS = ['Criatura', 'Animal', 'Ação', 'Atributo'];
 
-function AddEntityModal({ 
-  isOpen, 
+function AddEntityModal({
+  isOpen,
   onClose,
   onSaveCarta,
   onSaveAnimal,
   onSaveAcao,
   onSaveAtributo,
-  animaisDisponiveis = [], 
-  acoesDisponiveis = [], 
-  atributosDisponiveis = []
+  animaisDisponiveis = [],
+  acoesDisponiveis = [],
+  atributosDisponiveis = [],
+  cartasExistentes = []
 }) {
-  const [activeTab, setActiveTab] = useState(TABS[0]); 
+  const [activeTab, setActiveTab] = useState(TABS[0]);
 
   const [habilidade, setHabilidade] = useState('');
-  const [vida, setVida] = useState(0);
-  const [tamanho, setTamanho] = useState(0);
-  const [ataque, setAtaque] = useState(0);
-  const [defesa, setDefesa] = useState(0);
-  const [custo, setCusto] = useState(0);
+  const [vida, setVida] = useState('');
+  const [tamanho, setTamanho] = useState('');
+  const [ataque, setAtaque] = useState('');
+  const [defesa, setDefesa] = useState('');
+  const [custo, setCusto] = useState('');
   const [selectedAnimalId, setSelectedAnimalId] = useState('');
  
   const [selectedAcoes, setSelectedAcoes] = useState([]);
@@ -37,8 +38,14 @@ function AddEntityModal({
 
   const resetForms = () => {
     setHabilidade('');
-    setVida(0);
-    //resetar tudo
+    setVida('');
+    setTamanho('');
+    setAtaque('');
+    setDefesa('');
+    setCusto('');
+    setSelectedAnimalId('');
+    setSelectedAcoes([]);
+    setSelectedAtributos([]);
   }
 
 
@@ -51,16 +58,18 @@ function AddEntityModal({
           alert('Por favor, selecione um Animal Base.');
           return;
         }
+        const nomeAnimalSelecionado = animaisDisponiveis.find(a => a.id === Number(selectedAnimalId))?.nome;
         onSaveCarta({
           habilidade, 
-          vida, 
-          tamanho, 
-          ataque, 
-          defesa, 
-          custo,
-          animalId: Number(selectedAnimalId),
+          vida: Number(vida) || 0,
+          tamanho: Number(tamanho) || 0,
+          ataque: Number(ataque) || 0,
+          defesa: Number(defesa) || 0,
+          custo: Number(custo) || 0,
+          animalId: Number(selectedAnimalId), 
+          nomeAnimalSelecionado: nomeAnimalSelecionado,
           acoesIds: selectedAcoes, 
-          atributosIds: selectedAtributos, 
+          atributosIds: selectedAtributos,
         });
 
       } else if (activeTab === 'Animal') {
@@ -136,6 +145,8 @@ function AddEntityModal({
   const getAcaoNome = (id) => acoesDisponiveis.find(a => a.id === id)?.nome || '??';
   const getAtributoNome = (id) => atributosDisponiveis.find(a => a.id === id)?.nome || '??';
 
+  const usedAnimalIds = cartasExistentes.map(carta => carta.animalId);
+
   const renderFormContent = () => {
     switch (activeTab) {
       case 'Criatura':
@@ -144,35 +155,44 @@ function AddEntityModal({
             {/*inputs de Vida, Tamanho, Ataque */}
 
              <div className="sm:col-span-3">
-               <label htmlFor="vida" className="block text-sm font-medium leading-6 text-gray-900">Vida (HP)</label>
-               <input type="number" id="vida" value={vida} onChange={(e) => setVida(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-             </div>
-             <div className="sm:col-span-3">
-               <label htmlFor="tamanho" className="block text-sm font-medium leading-6 text-gray-900">Tamanho</label>
-               <input type="number" id="tamanho" value={tamanho} onChange={(e) => setTamanho(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-             </div>
-             <div className="sm:col-span-3">
-               <label htmlFor="ataque" className="block text-sm font-medium leading-6 text-gray-900">Ataque</label>
-               <input type="number" id="ataque" value={ataque} onChange={(e) => setAtaque(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-             </div>
-             <div className="sm:col-span-3">
-               <label htmlFor="defesa" className="block text-sm font-medium leading-6 text-gray-900">Defesa</label>
-               <input type="number" id="defesa" value={defesa} onChange={(e) => setDefesa(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-             </div>
-             <div className="sm:col-span-3">
-               <label htmlFor="custo" className="block text-sm font-medium leading-6 text-gray-900">Custo</label>
-               <input type="number" id="custo" value={custo} onChange={(e) => setCusto(Number(e.target.value))} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-             </div>
+              <label htmlFor="vida" className="block text-sm font-medium leading-6 text-gray-900">Vida (HP)</label>
+              <input type="number" id="vida" value={vida} onChange={(e) => setVida(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            </div>
+            <div className="sm:col-span-3">
+              <label htmlFor="tamanho" className="block text-sm font-medium leading-6 text-gray-900">Tamanho</label>
+              <input type="number" id="tamanho" value={tamanho} onChange={(e) => setTamanho(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            </div>
+            <div className="sm:col-span-3">
+              <label htmlFor="ataque" className="block text-sm font-medium leading-6 text-gray-900">Ataque</label>
+              <input type="number" id="ataque" value={ataque} onChange={(e) => setAtaque(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            </div>
+            <div className="sm:col-span-3">
+              <label htmlFor="defesa" className="block text-sm font-medium leading-6 text-gray-900">Defesa</label>
+              <input type="number" id="defesa" value={defesa} onChange={(e) => setDefesa(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            </div>
+            <div className="sm:col-span-3">
+              <label htmlFor="custo" className="block text-sm font-medium leading-6 text-gray-900">Custo</label>
+              <input type="number" id="custo" value={custo} onChange={(e) => setCusto(e.target.value)} min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+            </div>
             
              <div className="sm:col-span-3">
-                <label htmlFor="animal" className="block text-sm font-medium leading-6 text-gray-900">Animal Base</label>
-                <select id="animal" value={selectedAnimalId} onChange={(e) => setSelectedAnimalId(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
-                  <option value="">Selecione...</option>
-                  {animaisDisponiveis.map(animal => ( 
-                    <option key={animal.id} value={animal.id}>{animal.nome}</option> 
-                  ))}
-                </select>
-             </div>
+              <label htmlFor="animal" className="block text-sm font-medium leading-6 text-gray-900">Animal Base</label>
+              <select id="animal" value={selectedAnimalId} onChange={(e) => setSelectedAnimalId(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
+                <option value="">Selecione...</option>
+                {animaisDisponiveis.map(animal => {
+                  const jaExiste = usedAnimalIds.includes(animal.id);
+                  return (
+                    <option 
+                      key={animal.id} 
+                      value={animal.id} 
+                      disabled={jaExiste}
+                    >
+                      {animal.nome} {jaExiste ? '(Já Criado)' : ''}
+                    </option> 
+                  );
+                })}
+              </select>
+            </div>
 
              <div className="col-span-full">
                <label htmlFor="habilidade" className="block text-sm font-medium leading-6 text-gray-900">Habilidade (Descrição)</label>
@@ -319,7 +339,8 @@ function AddEntityModal({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="mt-2 space-y-4 min-h-[200px]"> 
+
+          <div className="mt-2 space-y-4 max-h-[60vh] overflow-y-auto p-1"> 
             {renderFormContent()} 
           </div>
 
@@ -333,7 +354,6 @@ function AddEntityModal({
               type="submit" 
               className="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700"
             >
-
               {activeTab === 'Criatura' ? 'Salvar Criatura (✓)' : `Salvar ${activeTab} (✓)`}
             </button>
           </div>
