@@ -10,7 +10,7 @@ function CardDetail({ carta, onClose }) {
 
       <button 
         onClick={onClose} 
-        className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-gray-700 text-xl font-semibold shadow-md transition-transform hover:scale-110 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+        className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-pink-300 text-white text-xl font-semibold shadow-md transition-transform hover:scale-110 hover:bg-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-75"
         aria-label="Fechar modal"
       >
         &times;
@@ -47,14 +47,16 @@ function CardDetail({ carta, onClose }) {
             </div>
           </div>
         </div>
-
+        
         <div className="mt-6 flex w-full items-center justify-center md:mt-0 md:w-1/3">
-          <div className="flex h-56 w-56 items-center justify-center rounded-lg bg-gray-100 p-4 shadow-inner">
-            <img 
-              src={imagemSrc} 
-              alt={nome} 
-              className="max-h-full max-w-full object-contain"
-            />
+          <div className="rounded-lg bg-gray-100 shadow-inner">
+            <div className="relative overflow-hidden rounded-lg w-56 h-56 md:w-63 md:h-64">
+              <img
+              src={imagemSrc}
+              alt={nome}
+              className="absolute inset-0 h-full w-full object-contain"
+              />
+            </div>
           </div>
         </div>
       </div>
