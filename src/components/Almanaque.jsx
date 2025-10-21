@@ -21,6 +21,7 @@ function Almanaque() {
   );
   const [acoes, setAcoes] = useState(() => getFromStorage('acoes'));
   const [atributos, setAtributos] = useState(() => getFromStorage('atributos'));
+  const [efeitos, setEfeitos] = useState(() => getFromStorage('efeitos'));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -96,6 +97,16 @@ function Almanaque() {
     });
     console.log("Atributo salvo:", atributoComId);
   };
+  
+  const handleSaveEfeito = (novoEfeito) => {
+    const efeitoComId = { ...novoEfeito, id: Date.now() };
+    setEfeitos(prevEfeitos => {
+      const novosEfeitos = [...prevEfeitos, efeitoComId];
+      saveToStorage('efeitos', novosEfeitos);
+      return novosEfeitos;
+    });
+    console.log("Efeito salvo:", efeitoComId);
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -131,10 +142,13 @@ function Almanaque() {
           onSaveAnimal={handleSaveAnimal}
           onSaveAcao={handleSaveAcao}
           onSaveAtributo={handleSaveAtributo}
+          onSaveEfeito={handleSaveEfeito}
 
           animaisDisponiveis={animais}
           acoesDisponiveis={acoes}
           atributosDisponiveis={atributos}
+          efeitosDisponiveis={efeitos}
+          cartasExistentes={cartas}
         />
       )}
     </div>
