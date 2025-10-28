@@ -12,16 +12,11 @@ const saveToStorage = (key, data) => {
 
 function Almanaque() {
 
-  const [cartas, setCartas] = useState(() => getFromStorage('cartas'));
-  const [animais, setAnimais] = useState(
-    () => getFromStorage('animais').length > 0 ? getFromStorage('animais') : [
-      { id: 1, nome: 'Orca', nomeCientifico: 'Orcinus orca' },
-      { id: 2, nome: 'Bullfrog', nomeCientifico: 'Rana catesbeiana' }
-    ]
-  );
-  const [acoes, setAcoes] = useState(() => getFromStorage('acoes'));
-  const [atributos, setAtributos] = useState(() => getFromStorage('atributos'));
-  const [efeitos, setEfeitos] = useState(() => getFromStorage('efeitos'));
+  const [cartas, setCartas] = useState();
+  const [animais, setAnimais] = useState();
+  const [acoes, setAcoes] = useState();
+  const [atributos, setAtributos] = useState();
+  const [efeitos, setEfeitos] = useState();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
