@@ -237,16 +237,6 @@ function AddEntityModal({
               </select>
             </div>
 
-            <div className="sm:col-span-3">
-              <label htmlFor="animal" className="block text-sm font-medium leading-6 text-gray-900">Animal Base</label>
-              <select id="animal" value={selectedAnimalId} onChange={(e) => setSelectedAnimalId(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
-                <option value="">Selecione...</option>
-                {animaisDisponiveis.map(animal => (
-                  <option key={animal.id} value={animal.id}>{animal.nome}</option>
-                ))}
-              </select>
-            </div>
-
             <div className="col-span-full">
               <label htmlFor="habilidade" className="block text-sm font-medium leading-6 text-gray-900">Habilidade (Descrição)</label>
               <textarea id="habilidade" rows={3} value={habilidade} onChange={(e) => setHabilidade(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
@@ -351,11 +341,11 @@ function AddEntityModal({
           <div className="space-y-4">
             <div>
               <label htmlFor="animalNome" className="block text-sm font-medium text-gray-900">Nome do Animal</label>
-              <input type="text" id="animalNome" value={animalNome} onChange={(e) => setAnimalNome(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ex: Orca" />
+              <input type="text" id="animalNome" value={animalNome} onChange={(e) => setAnimalNome(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ex: ANA" />
             </div>
             <div>
               <label htmlFor="animalNomeCient" className="block text-sm font-medium text-gray-900">Nome Científico (Opcional)</label>
-              <input type="text" id="animalNomeCient" value={animalNomeCient} onChange={(e) => setAnimalNomeCient(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ex: Orcinus orca" />
+              <input type="text" id="animalNomeCient" value={animalNomeCient} onChange={(e) => setAnimalNomeCient(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ex: VIVI ANE" />
             </div>
             <p className="text-sm text-gray-500">Ao salvar, o animal ficará disponível no dropdown da aba "Criatura".</p>
           </div>

@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import Card from './components/Card.jsx';
 import CardDetail from './components/CardDetail.jsx';
+import AddModal from './components/AddModal.jsx';
+
+import AWclaro from './assets/AWclaro.png';
+import AWescuro from './assets/AWescuro.png';
+
 import orcaImg from './assets/orca.png';
 import bullfrogImg from './assets/bullfrog.png';
 import lyrebirdImg from './assets/lyrebird.png';
@@ -20,10 +25,6 @@ import penguinImg from './assets/penguin.png';
 import shrimpImg from './assets/shrimp-export.png';
 import silverfishImg from './assets/silverfish.png';
 
-import AddModal from './components/AddModal.jsx';
-
-import AWclaro from './assets/AWclaro.png';
-import AWescuro from './assets/AWescuro.png';
 
 const getFromStorage = (key) => {
   const data = localStorage.getItem(key);
@@ -35,502 +36,30 @@ const saveToStorage = (key, data) => {
 };
 
 
-
-const initialCartas = [
-  {
-    id: 1,
-    nome: 'Orca',
-    numero: '#1234',
-    imagemSrc: orcaImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 2,
-    nome: 'BullFrog',
-    imagemSrc: bullfrogImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 3,
-    nome: 'Lyrebird',
-    imagemSrc: lyrebirdImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 4,
-    nome: 'Ant',
-    imagemSrc: antImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 5,
-    nome: 'Cheerleader Crab',
-    imagemSrc: cheerleaderCrabImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 6,
-    nome: 'Chrysalis',
-    imagemSrc: chrysalisImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 7,
-    nome: 'Cone Snail',
-    imagemSrc: coneSnailImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 8,
-    nome: 'Decorator Crab',
-    imagemSrc: decoratorCrabImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 9,
-    nome: 'Earthworm',
-    imagemSrc: earthwormImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 10,
-    nome: 'False Eyed Frog',
-    imagemSrc: falseEyedFrogImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 11,
-    nome: 'Firefly',
-    imagemSrc: fireglyImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 12,
-    nome: 'Giant Snail',
-    imagemSrc: giantSnailImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 13,
-    nome: 'Googly',
-    imagemSrc: googlyImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 14,
-    nome: 'Nautilus',
-    imagemSrc: nautilusImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 15,
-    nome: 'Pearl Oyster',
-    imagemSrc: pearlOysterImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 16,
-    nome: 'Penguin',
-    imagemSrc: penguinImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 17,
-    nome: 'Shrimp',
-    imagemSrc: shrimpImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-  {
-    id: 18,
-    nome: 'Silverfish',
-    imagemSrc: silverfishImg,
-    statsResumo: 'tam: 9 hp: 7 atk: 6 def: 4',
-    statsDetalhe: {
-      hp: 'X',
-      tamanho: 'X',
-      defesa: 'X',
-      ataque: 'X'
-    },
-    descricao: 'blablabla blablabla',
-    acoes: [
-      { id: 7, nome: 'Derrubar', descricao: 'blebleble blebleble' }
-    ],
-    atributos: [
-      { id: 4, nome: 'Contracoloração', descricao: 'bliblbilbi bliblbibli' },
-      { id: 15, nome: 'Social', descricao: 'blobloblo blobloblo' } 
-    ],
-    tags: [
-      { nome: 'derrubar', tipo: 'amarelo' },
-      { nome: 'hidrodinamico', tipo: 'ciano' },
-      { nome: 'social', tipo: 'ciano' },
-    ]
-  },
-];
-
 const senhaGamedev = '250618';
 
 function App() {
 
   const [cartas, setCartas] = useState(() => {
-    const saved = getFromStorage('cartas');
-
-    return saved.length > 0 ? saved : initialCartas;
+    
   });
 
   const [animais, setAnimais] = useState(() => {
     const saved = getFromStorage('animais');
     if (saved.length > 0) return saved;
 
-    const defaultAnimais = initialCartas.map(carta => ({
-      id: carta.id,
-      nome: carta.nome,
-      imagemSrc: carta.imagemSrc
-    }));
-    saveToStorage('animais', defaultAnimais);
-    return defaultAnimais;
   });
 
   const [acoes, setAcoes] = useState(() => {
     const saved = getFromStorage('acoes');
     if (saved.length > 0) return saved;
 
-    const allAcoes = initialCartas.flatMap(c => c.acoes || []);
-    const uniqueAcoes = Array.from(new Map(allAcoes.map(a => [a.id, a])).values());
-    saveToStorage('acoes', uniqueAcoes);
-    return uniqueAcoes;
   });
 
   const [atributos, setAtributos] = useState(() => {
     const saved = getFromStorage('atributos');
     if (saved.length > 0) return saved;
 
-    const allAtributos = initialCartas.flatMap(c => c.atributos || []);
-    const uniqueAtributos = Array.from(new Map(allAtributos.map(a => [a.id, a])).values());
-    saveToStorage('atributos', uniqueAtributos);
-    return uniqueAtributos;
   });
 
 
@@ -705,7 +234,7 @@ function App() {
         )}
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {cartas.map((carta) => ( 
+        {/* {cartas.map((carta) => ( 
           <Card 
             key={carta.id} 
             cardId={carta.id}
@@ -717,7 +246,7 @@ function App() {
             isAdmin={isAdminMode}
             onDelete={handleDeleteCarta}
           />
-        ))}
+        ))} */}
       </div>
 
       {cartaSelecionada && (
@@ -756,7 +285,7 @@ function App() {
         className="fixed top-4 right-4 z-50 rounded-full bg-gray-500 p-3 text-white shadow-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
         title={isDarkMode ? "Mudar para Tema Claro" : "Mudar para Tema Escuro"}
       >
-        {/* Ícone simples (pode trocar por SVG se preferir) */}
+        {/* OLOCA ICON DO PEDRO AQU */}
         {isDarkMode ? '☀️' : '🌙'}
       </button>
     </div>
