@@ -238,7 +238,7 @@ function AddEntityModal({
             </div>
 
             <div className="col-span-full">
-              <label htmlFor="habilidade" className="block text-sm font-medium leading-6 text-gray-900">Habilidade (Descrição)</label>
+              <label htmlFor="habilidade" className="block text-sm font-medium leading-6 text-gray-900">Habilidade</label>
               <textarea id="habilidade" rows={3} value={habilidade} onChange={(e) => setHabilidade(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
             </div>
 
@@ -346,6 +346,10 @@ function AddEntityModal({
             <div>
               <label htmlFor="animalNomeCient" className="block text-sm font-medium text-gray-900">Nome Científico (Opcional)</label>
               <input type="text" id="animalNomeCient" value={animalNomeCient} onChange={(e) => setAnimalNomeCient(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Ex: VIVI ANE" />
+            </div>
+            <div>
+              <label htmlFor="animalDesc" className="block text-sm font-medium text-gray-900">Descrição (Opcional)</label>
+              <textarea id="animalDesc" rows={3} value={acaoDesc} onChange={(e) => setAnimalDesc(e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
             </div>
             <p className="text-sm text-gray-500">Ao salvar, o animal ficará disponível no dropdown da aba "Criatura".</p>
           </div>
