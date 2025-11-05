@@ -1,3 +1,6 @@
+import React from 'react';
+const API_URL = 'http://localhost:3002';
+
 function Card({ nome, imagemSrc, statsResumo, tags, onClick, isAdmin, onDelete, cardId }) {
 
   const getTagColor = (tipo) => {
@@ -18,8 +21,9 @@ function Card({ nome, imagemSrc, statsResumo, tags, onClick, isAdmin, onDelete, 
     }
   };
 
+  const urlCompletaDaImagem = API_URL + imagemSrc;
+  
   return (
-
     <div
       onClick={onClick}
       className="relative max-w-xs cursor-pointer rounded border border-gray-400 bg-white p-2 shadow-md transition-all hover:scale-105 hover:shadow-lg"
@@ -40,7 +44,7 @@ function Card({ nome, imagemSrc, statsResumo, tags, onClick, isAdmin, onDelete, 
       <div className="my-2 rounded border bg-gray-100">
         <div className="relative w-full overflow-hidden rounded aspect-[4/3] sm:aspect-[5/4]">
           <img
-            src={imagemSrc}
+            src={urlCompletaDaImagem}
             alt={nome}
             className="absolute inset-0 h-full w-full object-contain p-2"
           />

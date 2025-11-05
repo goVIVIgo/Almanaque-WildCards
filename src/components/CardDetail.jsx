@@ -1,8 +1,22 @@
+const API_URL = 'http://localhost:3002';
+
 function CardDetail({ carta, onClose }) {
   
   if (!carta) return null;
 
-  const { nome, numero, imagemSrc, statsDetalhe, descricao, acoes, atributos } = carta;
+  const { 
+    nomeCientifico, 
+    urlImagem, 
+    vida, 
+    tamanho, 
+    ataque, 
+    defesa, 
+    habilidade,
+    acoes = [], 
+    atributos = [] 
+  } = carta;
+
+  const urlCompletaDaImagem = API_URL + urlImagem;
 
   return (
     <div className="relative mx-auto max-w-3xl rounded-xl border border-gray-300 bg-white p-6 shadow-2xl">
@@ -18,19 +32,20 @@ function CardDetail({ carta, onClose }) {
       <div className="flex flex-col gap-6 md:flex-row">
 
         <div className="flex-1 pr-0 md:pr-4">
-          <h2 className="text-3xl font-bold text-gray-900">{nome} {numero}</h2>
+
+          <h2 className="text-3xl font-bold text-gray-900">{nomeCientifico}</h2>
+
           <p className="mt-2 text-xl text-gray-700">
-            hp: {statsDetalhe.hp} tamanho: {statsDetalhe.tamanho} defesa: {statsDetalhe.defesa} ataque: {statsDetalhe.ataque}
+            hp: {vida} tamanho: {tamanho || '?'} defesa: {defesa} ataque: {ataque}
           </p>
-          <p className="mt-4 text-gray-600">{descricao}</p>
+
+          <p className="mt-4 text-gray-600">{habilidade || 'Nenhuma habilidade descrita.'}</p>
 
           <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-
             <div className="rounded-lg border border-gray-200 bg-white p-4">
               <h4 className="font-bold text-gray-800">Ações:</h4>
               {acoes && acoes.length > 0 ? (
                 acoes.map(acao => (
-
                   <div key={acao.id || acao.nome} className="mt-2">
                     <h5 className="font-semibold text-gray-800">{acao.nome}</h5>
                     <p className="text-sm text-gray-600">{acao.descricao}</p>
@@ -45,7 +60,6 @@ function CardDetail({ carta, onClose }) {
               <h4 className="font-bold text-gray-800">Atributos:</h4>
               {atributos && atributos.length > 0 ? (
                 atributos.map(attr => (
-
                   <div key={attr.id || attr.nome} className="mt-2">
                     <h5 className="font-semibold text-gray-800">{attr.nome}</h5>
                     <p className="text-sm text-gray-600">{attr.descricao}</p>
@@ -55,7 +69,6 @@ function CardDetail({ carta, onClose }) {
                 <p className="text-sm text-gray-500">Nenhum atributo.</p>
               )}
             </div>
-            
           </div>
         </div>
         
@@ -63,9 +76,9 @@ function CardDetail({ carta, onClose }) {
           <div className="rounded-lg bg-gray-100 shadow-inner">
             <div className="relative overflow-hidden rounded-lg w-56 h-56 md:w-63 md:h-64">
               <img
-              src={imagemSrc}
-              alt={nome}
-              className="absolute inset-0 h-full w-full object-contain"
+                src={urlCompletaDaImagem}
+                alt={nomeCientifico}
+                className="absolute inset-0 h-full w-full object-contain"
               />
             </div>
           </div>
