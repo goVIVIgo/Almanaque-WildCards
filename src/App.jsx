@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import Card from './components/Card.jsx';
 import CardDetail from './components/CardDetail.jsx';
 import AddModal from './components/AddModal.jsx';
@@ -6,162 +6,36 @@ import AddModal from './components/AddModal.jsx';
 import AWclaro from './assets/AWclaro.png';
 import AWescuro from './assets/AWescuro.png';
 
-import { getTodasAsCartas } from './apiAlmanaqueWildcards.jsx';
+import noturno from './assets/Noturno.png';
+import claro from './assets/Claro.png';
+
+import {
+  getTodasAsCartas,
+  getTodosOsAnimais,
+  getTodosOsAtributos,
+  getTodasAsAcoes,
+  getTodosOsEfeitos,
+  getCartaPorId,
+  criarCarta,
+  criarAnimal,
+  criarImagem,
+  criarAtributo,
+  criarAcao,
+  criarEfeito,
+  deletarCarta,
+  uploadImagem
+} from './apiAlmanaqueWildcards.jsx';
+
+const senhaGamedev = '250618';
 
 function App() {
 
   const [cartas, setCartas] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [animais, setAnimais] = useState([]);
 
-  const [animais, setAnimais] = useState(() => {
-    const saved = getFromStorage('animais');
-    if (saved.length > 0) return saved;
-
-  });
-
-  const [acoes, setAcoes] = useState(() => {
-    const saved = getFromStorage('acoes');
-    if (saved.length > 0) return saved;
-
-  });
-
-  const [atributos, setAtributos] = useState(() => {
-    const saved = getFromStorage('atributos');
-    if (saved.length > 0) return saved;
-
-  });
-
-
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  const [cartaSelecionada, setCartaSelecionada] = useState(null);
-
-  const handleCardClick = (carta) => {
-    setCartaSelecionada(carta);
-  };
-
-  const handleCloseModal = () => {
-    setCartaSelecionada(null);
-  };
-
-  const [isAdminMode, setIsAdminMode] = useState(false);
-  const [titleClickCount, setTitleClickCount] = useState(0);
-
-  const handleTitleClick = () => {
-    const newClickCount = titleClickCount + 1;
-    setTitleClickCount(newClickCount);
-
-    if (newClickCount === 3) {
-
-      const enteredPassword = window.prompt("dica: meu, seu, nosso aniversario!");
-
-      if (enteredPassword === senhaGamedev) {
-        setIsAdminMode(true);
-        alert('Modo Admin ativado!');
-      } else if (enteredPassword !== null) {
-        alert('Senha incorreta.');
-      }
-
-      setTitleClickCount(0);
-    }
-  };
-
-  const handleSaveAnimal = (novoAnimal) => {
-    const animalComId = { ...novoAnimal, id: Date.now() };
-    setAnimais(prevAnimais => {
-      const novosAnimais = [...prevAnimais, animalComId];
-      saveToStorage('animais', novosAnimais);
-      return novosAnimais;
-    });
-  };
-
-  const handleSaveAcao = (novaAcao) => {
-    const acaoComId = { ...novaAcao, id: Date.now() };
-    setAcoes(prevAcoes => {
-      const novasAcoes = [...prevAcoes, acaoComId];
-      saveToStorage('acoes', novasAcoes);
-      return novasAcoes;
-    });
-  };
-
-  const handleSaveAtributo = (novoAtributo) => {
-    const atributoComId = { ...novoAtributo, id: Date.now() };
-    setAtributos(prevAtributos => {
-      const novosAtributos = [...prevAtributos, atributoComId];
-      saveToStorage('atributos', novosAtributos);
-      return novosAtributos;
-    });
-  };
-
-  const handleSaveCarta = (dataFromModal) => {
-    const { habilidade, vida, tamanho, ataque, defesa, custo, animalId, nomeAnimalSelecionado, acoesIds, atributosIds } = dataFromModal;
-
-    const animal = animais.find(a => a.nome === nomeAnimalSelecionado);
-    if (!animal) {
-
-      const animalById = animais.find(a => a.id === animalId);
-      if (!animalById) {
-        alert("Erro crítico: Animal não encontrado nem pelo nome nem pelo ID!");
-        return;
-      }
-
-      console.warn("Animal encontrado pelo ID, mas não pelo nome. Verifique consistência.");
-
-    }
-
-    const animalJaExiste = cartas.some(carta => carta.nome === nomeAnimalSelecionado);
-    if (animalJaExiste) {
-      alert("Erro: Já existe uma carta para este animal (Nome: " + nomeAnimalSelecionado + ")!");
-      return;
-    }
-
-    const acoesObjs = acoesIds.map(id => acoes.find(a => a.id === id)).filter(Boolean);
-    const atributosObjs = atributosIds.map(id => atributos.find(a => a.id === id)).filter(Boolean);
-
-    const novaCarta = {
-      id: Date.now(),
-      animalId: animalId,
-      nome: nomeAnimalSelecionado || animal?.nome || `Animal ID ${animalId}`,
-      numero: `#${String(Date.now()).slice(-4)}`,
-      imagemSrc: animal?.imagemSrc || animais.find(a => a.id === animalId)?.imagemSrc,
-      statsResumo: `tam: ${tamanho} hp: ${vida} atk: ${ataque} def: ${defesa}`,
-      statsDetalhe: {
-        hp: String(vida),
-        tamanho: String(tamanho),
-        defesa: String(defesa),
-        ataque: String(ataque)
-      },
-      descricao: habilidade,
-      acoes: acoesObjs,
-      atributos: atributosObjs,
-      tags: [
-        ...atributosObjs.map(a => ({ nome: a.nome, tipo: 'ciano' })),
-        ...acoesObjs.map(a => ({ nome: a.nome, tipo: 'amarelo' }))
-      ]
-    };
-
-    setCartas(prevCartas => {
-      const novasCartas = [...prevCartas, novaCarta];
-      saveToStorage('cartas', novasCartas);
-      return novasCartas;
-    });
-
-    setIsAddModalOpen(false);
-  };
-
-  const handleDeleteCarta = (idToDelete) => {
-    setCartas(prevCartas => {
-      const novasCartas = prevCartas.filter(carta => carta.id !== idToDelete);
-      saveToStorage('cartas', novasCartas);
-      console.log("Carta excluída:", idToDelete);
-      return novasCartas;
-    });
-
-    if (cartaSelecionada?.id === idToDelete) {
-      setCartaSelecionada(null);
-    }
-  };
+  const [acoes, setAcoes] = useState([]);
+  const [atributos, setAtributos] = useState([]);
+  const [efeitos, setEfeitos] = useState([]);
 
   /* BOTÃO DE REGRASSSSSSSSSSSSSSS */
 
@@ -219,21 +93,53 @@ function App() {
   const openRules = () => setShowRules(true);
   const closeRules = () => setShowRules(false);
 
-  /* BOTÃO DE REGRAS ACABA AQUI*/
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [cartaSelecionada, setCartaSelecionada] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [titleClickCount, setTitleClickCount] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('themeMode');
     return savedMode ? JSON.parse(savedMode) : false;
   });
 
   useEffect(() => {
-    const carregarCartas = async () => {
+    const carregarDados = async () => {
       try {
         setIsLoading(true);
         setError(null);
-
-        const cartasData = await getTodasAsCartas();
+        const [cartasData, animaisData, atributosData, acoesData, efeitosData] = await Promise.all([
+          getTodasAsCartas(),
+          getTodosOsAnimais(),
+          getTodosOsAtributos(),
+          getTodasAsAcoes(),
+          getTodosOsEfeitos()
+        ]);
         setCartas(cartasData);
+        setAnimais(animaisData);
+        const atributosNormalizados = atributosData.map(attr => ({
+          id: attr.atributoID,
+          nome: attr.nomeAtributo,
+          descricao: attr.descricaoAtributo
+        }));
+        setAtributos(atributosNormalizados);
+
+        const acoesNormalizadas = acoesData.map(ac => ({
+          id: ac.acaoID,
+          nome: ac.custo,
+          descricao: ac.descricaoAcao
+        }));
+        setAcoes(acoesNormalizadas);
+
+        const efeitosNormalizados = efeitosData.map(ef => ({
+          id: ef.efeitoID,
+          nome: ef.nomeEfeito,
+          descricao: ef.descricaoEfeito
+        }));
+        setEfeitos(efeitosNormalizados);
 
       } catch (err) {
         console.error("Erro ao carregar dados da API:", err);
@@ -242,15 +148,172 @@ function App() {
         setIsLoading(false);
       }
     };
-
-    carregarCartas();
+    carregarDados();
   }, []);
+  const handleCardClick = async (carta) => {
+    try {
+      setCartaSelecionada(null);
+      const dadosDetalhados = await getCartaPorId(carta.cartaID);
+      setCartaSelecionada(dadosDetalhados);
+    } catch (err) {
+      console.error("Erro ao buscar detalhes da carta:", err);
+      alert(`Não foi possível carregar os detalhes da carta: ${err.message}`);
+    }
+  };
+  const handleCloseModal = () => setCartaSelecionada(null);
+
   const toggleDarkMode = () => {
     setIsDarkMode(prevMode => {
       const newMode = !prevMode;
       localStorage.setItem('themeMode', JSON.stringify(newMode));
       return newMode;
     });
+  };
+
+  const handleTitleClick = () => {
+    const newClickCount = titleClickCount + 1;
+    setTitleClickCount(newClickCount);
+    if (newClickCount === 3) {
+      const enteredPassword = window.prompt("dica: meu, seu, nosso aniversario!");
+      if (enteredPassword === senhaGamedev) {
+        setIsAdminMode(true);
+        alert('Modo Admin ativado!');
+      } else if (enteredPassword !== null) {
+        alert('Senha incorreta.');
+      }
+      setTitleClickCount(0);
+    }
+  };
+
+
+  const handleSaveCarta = async (dataFromModal) => {
+    try {
+      const {
+        habilidade, vida, tamanho, ataque, defesa, custo, animalId,
+        acoesIds, atributosIds
+      } = dataFromModal;
+
+      const novaCartaData = {
+        habilidade: habilidade || null,
+        vida: Number(vida),
+        tamanho: tamanho ? Number(tamanho) : null,
+        ataque: Number(ataque),
+        defesa: Number(defesa),
+        custo: Number(custo),
+        animalID: Number(animalId),
+        acoesIds: acoesIds,
+        atributosIds: atributosIds,
+      };
+
+      await criarCarta(novaCartaData);
+      const cartasAtualizadas = await getTodasAsCartas();
+      setCartas(cartasAtualizadas);
+      setIsAddModalOpen(false);
+      alert('Carta criada com sucesso!');
+    } catch (err) {
+      console.error("Erro ao salvar carta:", err);
+      alert(`Erro ao salvar carta: ${err.message}`);
+    }
+  };
+
+  const handleSaveAnimal = async (novoAnimal) => {
+    try {
+      const { nomeCientifico, descricaoAnimal, imagemFile } = novoAnimal;
+      if (!imagemFile || !nomeCientifico) {
+        alert('Nome Científico e um Arquivo de Imagem são obrigatórios.');
+        return;
+      }
+      const uploadResult = await uploadImagem(imagemFile);
+      const imageUrl = uploadResult.url;
+      const imagemSalva = await criarImagem(imageUrl);
+      const animalData = { nomeCientifico, descricaoAnimal, imagemID: imagemSalva.imagemID };
+      await criarAnimal(animalData);
+      const animaisAtualizados = await getTodosOsAnimais();
+      setAnimais(animaisAtualizados);
+      alert('Animal e Imagem criados com sucesso!');
+    } catch (err) {
+      console.error("Erro ao salvar animal:", err);
+      alert(`Erro ao salvar animal: ${err.message}`);
+    }
+  };
+
+  const handleDeleteCarta = async (idToDelete) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta carta?')) {
+      return;
+    }
+    try {
+      await deletarCarta(idToDelete);
+      setCartas(prevCartas => prevCartas.filter(carta => carta.cartaID !== idToDelete));
+      if (cartaSelecionada?.cartaID === idToDelete) {
+        setCartaSelecionada(null);
+      }
+      alert('Carta deletada.');
+    } catch (err) {
+      console.error("Erro ao deletar carta:", err);
+      alert(`Erro ao deletar carta: ${err.message}`);
+    }
+  };
+
+  const handleSaveAcao = async (dataFromModal) => {
+    try {
+      await criarAcao(dataFromModal);
+
+      const acoesAtualizadasBrutas = await getTodasAsAcoes();
+      const acoesNormalizadas = acoesAtualizadasBrutas.map(ac => ({
+        id: ac.acaoID,
+        nome: ac.custo,
+        descricao: ac.descricaoAcao
+      }));
+      setAcoes(acoesNormalizadas);
+
+    } catch (err) {
+      console.error("Erro ao salvar acao:", err);
+      alert(`Erro ao salvar acao: ${err.message}`);
+      throw err;
+    }
+  };
+
+  const handleSaveAtributo = async (dataFromModal) => {
+    try {
+      const atributoDataParaAPI = {
+        nomeAtributo: dataFromModal.nome,
+        descricaoAtributo: dataFromModal.descricao
+      };
+
+      await criarAtributo(atributoDataParaAPI);
+
+      const atributosAtualizadosBrutos = await getTodosOsAtributos();
+      const atributosNormalizados = atributosAtualizadosBrutos.map(attr => ({
+        id: attr.atributoID,
+        nome: attr.nomeAtributo,
+        descricao: attr.descricaoAtributo
+      }));
+      setAtributos(atributosNormalizados);
+
+    } catch (err) {
+      console.error("Erro ao salvar atributo:", err);
+      alert(`Erro ao salvar atributo: ${err.message}`);
+      throw err;
+    }
+  };
+
+
+  const handleSaveEfeito = async (dataFromModal) => {
+    try {
+      await criarEfeito(dataFromModal);
+      const efeitosAtualizadosBrutos = await getTodosOsEfeitos();
+      const efeitosNormalizados = efeitosAtualizadosBrutos.map(ef => ({
+        id: ef.efeitoID,
+        nome: ef.nomeEfeito,
+        descricao: ef.descricaoEfeito
+      }));
+      setEfeitos(efeitosNormalizados);
+
+    } catch (err) {
+      console.error("Erro ao salvar efeito:", err);
+      alert(`Erro ao salvar efeito: ${err.message}`);
+      throw err;
+    }
   };
 
   const bgColor = isDarkMode ? 'bg-gray-900' : 'bg-pink-100';
@@ -266,14 +329,27 @@ function App() {
 
   return (
     <div className={`min-h-screen p-8 ${bgColor} ${textColor}`}>
-
-      <div className="mb-6 cursor-pointer text-center text-4xl font-bold">
+      <div
+        className="mb-6 cursor-pointer text-center text-4xl font-bold"
+        onClick={handleTitleClick}
+        title="dica: meu, seu, nosso aniversario!"
+      >
         <img
           src={isDarkMode ? AWescuro : AWclaro}
           alt="Almanaque WildCards"
           className="mx-auto h-24 sm:h-28 md:h-32 lg:h-40 object-contain"
         />
+        {isAdminMode && <p className={`mt-2 text-xl font-bold ${textColor}`}>(modo: admin)</p>}
       </div>
+
+      {isAdminMode && (
+        <div className="col-span-full mt-6 mb-8 text-center">
+          <button onClick={() => setIsAddModalOpen(true)}
+            className="rounded bg-pink-300 px-4 py-2 font-bold text-white hover:bg-pink-400 ">
+            Adicionar Nova Entidade
+          </button>
+        </div>
+      )}
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {cartas.map((carta) => (
@@ -284,16 +360,55 @@ function App() {
             imagemSrc={carta.urlImagem}
             statsResumo={`tam: ${carta.tamanho || '?'} hp: ${carta.vida} atk: ${carta.ataque} def: ${carta.defesa}`}
             tags={[]}
+            onClick={() => handleCardClick(carta)}
+            isAdmin={isAdminMode}
+            onDelete={handleDeleteCarta}
+            isDarkMode={isDarkMode} 
           />
         ))}
       </div>
+
+      {cartaSelecionada && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4"
+          onClick={handleCloseModal}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <CardDetail
+              carta={cartaSelecionada}
+              onClose={handleCloseModal}
+            />
+          </div>
+        </div>
+      )}
+
+      <AddModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+
+        onSaveCarta={handleSaveCarta}
+        onSaveAnimal={handleSaveAnimal}
+        onSaveAcao={handleSaveAcao}
+        onSaveAtributo={handleSaveAtributo}
+        onSaveEfeito={handleSaveEfeito}
+
+        animaisDisponiveis={animais}
+        acoesDisponiveis={acoes}
+        atributosDisponiveis={atributos}
+        efeitosDisponiveis={efeitos}
+        cartasExistentes={cartas}
+      />
 
       <button
         onClick={toggleDarkMode}
         className="fixed top-4 right-4 z-50 rounded-full bg-gray-500 p-3 text-white shadow-lg hover:bg-gray-600"
         title={isDarkMode ? "Mudar para Tema Claro" : "Mudar para Tema Escuro"}
       >
-        {isDarkMode ? '☀️' : '🌙'}
+        <img
+          src={isDarkMode ? claro : noturno}
+          alt="Mudar tema"
+          className="h-6 w-6"
+        />
       </button>
 
       {/* Botão de Regras*/}
@@ -309,14 +424,14 @@ function App() {
       {/* Painel de Regras */}
       {showRules && (
         <div
-          className="absolute left-0 top-0 h-full w-full max-w-2xl md:max-w-3xl lg:max-w-4xl bg-white dark:bg-zinc-900 shadow-xl p-6 md:p-8 overflow-y-auto"
+          className={`absolute left-0 top-0 h-full w-full max-w-2xl md:max-w-3xl lg:max-w-4xl shadow-xl p-6 md:p-8 overflow-y-auto ${isDarkMode ? 'bg-zinc-900 text-zinc-200' : 'bg-white text-zinc-800'}`}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl md:text-3xl font-semibold">Regras do Almanaque WildCards</h2>
+            <h2 className={`text-2xl md:text-3xl font-semibold ${isDarkMode ? 'text-pink-100' : 'text-gray-900'}`}>Regras do Almanaque WildCards</h2>
             <button
               onClick={closeRules}
-              className="px-3 py-1.5 rounded bg-pink-300 dark:bg-zinc-800 hover:bg-pink-400 dark:hover:bg-zinc-700"
+              className={`px-3 py-1.5 rounded hover:bg-pink-400 ${isDarkMode ? 'bg-zinc-800 hover:bg-zinc-700' : 'bg-pink-300'}`}
             >
               Fechar
             </button>
@@ -325,12 +440,12 @@ function App() {
           <div className="space-y-6">
             {regras.map((r) => (
               <section key={r.id} className="space-y-2">
-                <h3 className="text-lg md:text-xl font-medium">{r.titulo}</h3>
-                <p className="text-base leading-relaxed text-zinc-800 dark:text-zinc-200 whitespace-pre-line">
+                <h3 className={`text-lg md:text-xl font-medium ${isDarkMode ? 'text-pink-100' : 'text-gray-800'}`}>{r.titulo}</h3>
+                <p className="text-base leading-relaxed whitespace-pre-line">
                   {r.texto}
                 </p>
                 {r.bullets && r.bullets.length > 0 && (
-                  <ul className="list-disc pl-6 space-y-1 text-base leading-relaxed text-zinc-800 dark:text-zinc-200">
+                  <ul className="list-disc pl-6 space-y-1 text-base leading-relaxed">
                     {r.bullets.map((b, i) => <li key={i}>{b}</li>)}
                   </ul>
                 )}
